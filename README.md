@@ -52,10 +52,10 @@ All stochastic procedures (stratified CV splits, repeated CV splits, Random Fore
 
 ## Citation
 
-If you use these pipelines in your research, please cite this repository (and the accompanying manuscript once published):
+If you use these pipelines in your research, please cite this release and repository (and the accompanying manuscript once published):
 
 ```bibtex
-@software{ghosh_2026_oscc_immune_collapse,
+@software{ghosh_2026_oscc_immune_collapse_v1_0_1,
   author       = {Ghosh, Sanchita},
   title        = {{Transcriptomic-Proteomic Divergence and Early Warning AI in Oral Dysplasia \& OSCC}},
   year         = 2026,
