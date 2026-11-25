@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24538290.svg)](https://doi.org/10.5281/zenodo.24538290)
 # Transcriptomic-Proteomic Divergence and Early Warning AI in Oral Dysplasia & OSCC
 
 Reproducible Python analysis pipelines accompanying the manuscript:
@@ -59,8 +60,8 @@ If you use these pipelines in your research, please cite this repository (and th
   title        = {{Transcriptomic-Proteomic Divergence and Early Warning AI in Oral Dysplasia \& OSCC}},
   year         = 2026,
   publisher    = {Zenodo},
-  version      = {v1.0.0},
-  doi          = {10.5281/zenodo.XXXXXXX},
+  version      = {v1.0.1},
+  doi          = {10.5281/zenodo.24538290},
   url          = {[https://github.com/Sanchita-Ghosh-01/OSCC-Immune-Collapse-AI](https://github.com/Sanchita-Ghosh-01/OSCC-Immune-Collapse-AI)}
 }
 ```
