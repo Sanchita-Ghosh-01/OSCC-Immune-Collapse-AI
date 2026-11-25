@@ -55,10 +55,9 @@ def compute_comprehensive_correlations(df, var1, var2, dcor_resamples=1000):
 # ============================================================
 # 1. FILE PATHS & DATA LOADING
 # ============================================================
-DEFAULT_PATH = Path(r"E:\Documents\RESEARCH_Anusandhan\Medical Technology\DATA\Required data set\Nov-2026_results_immune_collapse")
-USER_PATH = Path(os.environ.get("OSCC_DATA_DIR", DEFAULT_PATH if DEFAULT_PATH.exists() else Path(__file__).resolve().parent))
+USER_PATH = Path(os.environ.get("OSCC_DATA_DIR", Path(__file__).resolve().parent))
 INPUT_FILE = USER_PATH / "processed_synergy_data_final.xlsx"
-OUTPUT_FILE = USER_PATH / "advanced_statistical_results_Raw_&_Processed.xlsx"
+OUTPUT_FILE = USER_PATH / "advanced_statistical_results_Raw_and_Processed.xlsx"
 
 print_header("1. LOADING DATASETS")
 try:
@@ -73,14 +72,14 @@ try:
         df_geo = pd.DataFrame()
 except FileNotFoundError:
     print(f"Error: Could not find {INPUT_FILE}. Please run your main pipeline first.")
-    exit()
+    raise SystemExit(1)
 
 
 # ============================================================
 # 2. DATA CLEANING & STAGE MAPPING
 # ============================================================
 def encode_sex(value):
-    """Match Immune_Collapse_15-11-2026.py strictly: Male = 1, Female = 0."""
+    """Match 01_Immune_Collapse_Main_Pipeline.py strictly: Male = 1, Female = 0."""
     if pd.isna(value):
         return np.nan
     val = str(value).strip().lower()

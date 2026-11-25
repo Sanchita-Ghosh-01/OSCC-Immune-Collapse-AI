@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this code in your research, please cite it using the metadata below."
+type: software
+title: "Transcriptomic-Proteomic Divergence and Early Warning AI in Oral Dysplasia & OSCC"
+version: 1.0.0
+date-released: 2026-11-25
+license: MIT
+repository-code: "https://github.com/Sanchita-Ghosh-01/OSCC-Immune-Collapse-AI"
+authors:
+  - family-names: "Ghosh"
+    given-names: "Sanchita"
+    affiliation: "Department of Mathematics & School of Medical Science and Technology, IIT Kharagpur"
+    orcid: "https://orcid.org/0009-0000-1704-7428"
+keywords:
+  - oral squamous cell carcinoma
+  - oral dysplasia
+  - liquid biopsy
+  - explainable AI
+  - TreeSHAP
+  - IL-8
+  - sPD-L1

@@ -15,8 +15,7 @@ from scipy.interpolate import CubicSpline
 # =====================================================================
 
 # Set up portable paths (consistent with main pipeline & correlation script)
-DEFAULT_PATH = Path(r"E:\Documents\RESEARCH_Anusandhan\Medical Technology\DATA\Required data set\Nov-2026_results_immune_collapse")
-USER_PATH = Path(os.environ.get("OSCC_DATA_DIR", DEFAULT_PATH if DEFAULT_PATH.exists() else Path(__file__).resolve().parent))
+USER_PATH = Path(os.environ.get("OSCC_DATA_DIR", Path(__file__).resolve().parent))
 INPUT_FILE = USER_PATH / "processed_synergy_data_final.xlsx"
 
 
@@ -100,7 +99,7 @@ try:
     df_geo = pd.read_excel(xls, sheet_name='Global_GEO_mRNA')
 except Exception as e:
     print(f"Error loading data: {e}")
-    exit()
+    raise SystemExit(1)
 
 # =====================================================================
 # PART 1: CLINICAL SERUM PROTEINS (i-IPS)

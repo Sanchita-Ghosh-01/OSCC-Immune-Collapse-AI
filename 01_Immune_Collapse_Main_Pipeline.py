@@ -42,8 +42,7 @@ np.random.seed(42)
 
 
 # --- 1. CONFIGURATION ---
-DEFAULT_PATH = Path(r"E:\Documents\RESEARCH_Anusandhan\Medical Technology\DATA\Required data set")
-USER_PATH = Path(os.environ.get("OSCC_DATA_DIR", DEFAULT_PATH if DEFAULT_PATH.exists() else Path(__file__).resolve().parent))
+USER_PATH = Path(os.environ.get("OSCC_DATA_DIR", Path(__file__).resolve().parent))
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 if not USER_PATH.exists():
@@ -93,7 +92,7 @@ try:
 
 except Exception as e:
     print(f" Error loading files: {e}")
-    exit()
+    raise SystemExit(1)
 
 # --- 4. DATA CLEANING & RESIDUAL ANALYSIS ---
 print(f"Original Cohort Size: {len(master)}")
@@ -349,8 +348,8 @@ if knot_samples:
     knot_ci = np.percentile(knot_samples, [2.5, 97.5])
     print(f"-> Heuristic Knot 95% CI: {knot_ci[0]:.2f} - {knot_ci[1]:.2f}")
 
-# --- ADVANCED SCOPE 2b: PURE RAW DATA TIPPING POINT (Dedent to top level) ---
-print("\n--- ADVANCED SCOPE 2b: PURE RAW DATA TIPPING POINT (No Human Bias) ---")
+# --- ADVANCED SCOPE 2b: UNADJUSTED RAW BIOMARKER PIECEWISE CHECK ---
+print("\n--- ADVANCED SCOPE 2b: UNADJUSTED RAW BIOMARKER PIECEWISE CHECK ---")
 print("NOTE: Evaluating if an 'immune collapse' exists in the pure raw biomarkers before age/demographic adjustment.")
 
 master_both['raw_i_IPS'] = np.log1p(master_both['IL-8']) + np.log1p(master_both['sPD-L1'])
@@ -558,7 +557,7 @@ for name, vals in [
     mean_v, sd_rep, p025, p975 = summarize_repeats(vals)
     print(f"  {name:12s}: Mean = {mean_v:.4f} ± {sd_rep:.4f} (SD across 10 repeats) | 50-fold range [2.5-97.5%]: [{p025:.3f}, {p975:.3f}]")
 
-# --- Q1 LINEAR BASELINE BENCHMARK (L2 Logistic Regression) ---
+# --- LINEAR BASELINE BENCHMARK (L2 Logistic Regression) ---
 lr_pipe = Pipeline([
     ('scaler', StandardScaler()),
     ('clf', LogisticRegression(C=1.0, class_weight='balanced', max_iter=1000, random_state=42)),
@@ -591,7 +590,7 @@ model_benchmark_df = pd.DataFrame([
         'Rep10x5_PR': f"{lr_pr_m:.4f} ± {lr_pr_sd:.4f}",
     },
 ])
-print("\n--- Q1 LINEAR BASELINE BENCHMARK (RF vs. L2 Logistic Regression) ---")
+print("\n--- LINEAR BASELINE BENCHMARK (RF vs. L2 Logistic Regression) ---")
 print(model_benchmark_df.to_string(index=False))
 
 # Generate Calibration Curve (explicit axes avoids stray empty figure & title clipping)
@@ -655,7 +654,7 @@ fig_cv_beeswarm.update_traces(opacity=0.8, marker=dict(size=7, line=dict(width=0
 fig_cv_beeswarm.write_html(USER_PATH / 'cv_stable_shap_beeswarm_interactive.html')
 
 # ==============================================================================
-# --- 8. ALL VISUALIZATIONS (CLEANED & MATHEMATICALLY HONEST) ---
+# --- 8. VISUALIZATIONS ---
 # ==============================================================================
 print("\n--- 8. GENERATING VISUALIZATIONS ---")
 color_map = {'No Dysplasia': 'green', 'Mild Dysplasia': 'gold', 'Mod Dysplasia': 'orange', 'Sev Dysplasia': 'red', 'OSCC': 'darkred'}
@@ -668,7 +667,7 @@ if 'PC1' not in master_both.columns:
     master_both['PC1'] = pca_result[:, 0]
     master_both['PC2'] = pca_result[:, 1]
 
-# 1. PCA Clustering (Proves chaos/independence in early stages)
+# 1. PCA Clustering
 pc1_label = f"PC1 ({pca.explained_variance_ratio_[0] * 100:.1f}% Variance)"
 pc2_label = f"PC2 ({pca.explained_variance_ratio_[1] * 100:.1f}% Variance)"
 
@@ -693,7 +692,7 @@ fig_pca = px.scatter(
 fig_pca.update_traces(marker=dict(size=12, line=dict(width=1, color='DarkSlateGrey')))
 fig_pca.write_html(USER_PATH / 'adv1_pca_clustering_interactive.html')
 
-# 2. IEI Log-Ratio (Proves hot/cold ratio shift is false)
+# 2. IEI Log-Ratio
 plt.figure(figsize=(10, 6))
 sns.boxplot(x='Group', y='IEI_Log_Ratio', data=master_both, order=group_order, palette=color_map)
 plt.title('Immune Evasion-to-Inflammation Log-Ratio (IEI)')
@@ -762,7 +761,7 @@ px.box(master_both, x='Group', y='i_IPS', color='Group', hover_name='Patient_Nam
        category_orders={'Group': group_order}, color_discrete_map=color_map).write_html(
     USER_PATH / 'orig1_progression_boxplot_interactive.html')
 
-# 5. ROC Curve (Proves linear thresholds fail)
+# 5. Out-of-Fold ROC Curve (All-Stage Linear i-IPS)
 plt.figure(figsize=(8, 6))
 plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'i-IPS (AUC = {auc_val:.3f})')
 plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--', label='Chance (AUC = 0.500)')
@@ -868,7 +867,7 @@ if geo1_path.exists():
             h_stat_gips, p_val_gips = kruskal(*gips_groups)
             print(f" GSE30784 Genomic Synergy (g-IPS) Kruskal-Wallis: H={h_stat_gips:.4f}, p={p_val_gips:.4e}")
 
-            print("\n--- GSE30784 DUNN'S POST-HOC (Proving the OSCC Cliff) ---")
+            print("\n--- GSE30784 DUNN'S POST-HOC (FDR-BH) ---")
             geo_dunn = sp.posthoc_dunn(geo1_df, val_col='g_IPS', group_col='Group', p_adjust='fdr_bh')
             print(geo_dunn)
 
@@ -892,7 +891,7 @@ if geo1_path.exists():
             optimal_knot_geo = breaks_geo[1]
             print(f" -> Global GSE30784 optimal knot heuristically discovered at Pseudo-Time: {optimal_knot_geo:.4f}")
 
-            # --- GEO VISUALIZATIONS (Mathematically Sound) ---
+            # --- GEO VISUALIZATIONS ---
             # 1. Global Boxplot
             plt.figure(figsize=(10, 6))
             sns.boxplot(x='Group', y='g_IPS', data=geo1_df, order=group_order_geo, palette=color_map_geo)

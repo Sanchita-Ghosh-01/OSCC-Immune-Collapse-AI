@@ -1,0 +1,14 @@
+numpy
+pandas
+matplotlib
+seaborn
+plotly
+scipy
+scikit-posthocs
+statsmodels
+scikit-learn
+pwlf
+shap
+openpyxl
+pingouin>=0.6.0
+dcor

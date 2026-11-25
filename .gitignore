@@ -179,3 +179,13 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# Exclude private clinical data and regenerated outputs
+*.xlsx
+*.xls
+*.csv
+GSE30784_series_matrix.txt
+*.png
+*.html
+.idea/
+.venv/

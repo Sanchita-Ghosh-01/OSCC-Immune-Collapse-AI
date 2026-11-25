@@ -31,13 +31,7 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 # --- 1. CONFIGURATION ---
-DEFAULT_PATH = Path(r"E:\Documents\RESEARCH_Anusandhan\Medical Technology\DATA\Required data set")
-USER_PATH = Path(
-    os.environ.get(
-        "OSCC_DATA_DIR",
-        DEFAULT_PATH if DEFAULT_PATH.exists() else Path(__file__).resolve().parent,
-    )
-)
+USER_PATH = Path(os.environ.get("OSCC_DATA_DIR", Path(__file__).resolve().parent))
 
 DATA_FILE = USER_PATH / "clean-dataset.xlsx"
 if not DATA_FILE.exists():
@@ -191,7 +185,7 @@ for fold, (train_idx, test_idx) in enumerate(skf.split(X_raw_cv, y_cv), 1):
     X_train_adj = X_train_adj[feature_cols]
     X_test_adj = X_test_adj[feature_cols]
 
-    # 1. Train Black-Box Random Forest Classifier (on training fold)
+    # 1. Train Random Forest Classifier (on training fold)
     rf_fold = RandomForestClassifier(
         n_estimators=100,
         max_depth=4,
@@ -337,7 +331,7 @@ for name, vals in [
     )
 repeated_cv_df = pd.DataFrame(repeated_rows)
 
-# --- 5b. Q1 LINEAR BASELINE COMPARISON (Leakage-Free L2 Logistic Regression) ---
+# --- 5b. LINEAR BASELINE COMPARISON (Leakage-Free L2 Logistic Regression) ---
 # Evaluated on the exact same 5-fold and 10x5 splits; StandardScaler is fit inside each training fold via Pipeline.
 print("\n--- 5b. LINEAR BASELINE BENCHMARK (L2 Logistic Regression vs. Random Forest) ---")
 
