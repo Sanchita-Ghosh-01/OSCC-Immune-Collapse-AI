@@ -2,8 +2,9 @@ cff-version: 1.2.0
 message: "If you use this code in your research, please cite it using the metadata below."
 type: software
 title: "Transcriptomic-Proteomic Divergence and Early Warning AI in Oral Dysplasia & OSCC"
-version: 1.0.0
+version: "1.0.1"
 date-released: 2026-11-25
+doi: "10.5281/zenodo.24538290"
 license: MIT
 repository-code: "https://github.com/Sanchita-Ghosh-01/OSCC-Immune-Collapse-AI"
 authors:
